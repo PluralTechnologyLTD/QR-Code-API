@@ -10,8 +10,11 @@ import base64
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
-# In-memory database (replace with real DB in production)
+# Simulated in-memory database (use real DB for production)
 qr_store = {}
+
+# Replace this with your actual Render app URL after deploying
+PUBLIC_BASE_URL = "https://yourappname.onrender.com"
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -27,21 +30,20 @@ async def generate_qr(
 ):
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # Generate a unique ID for this entry
+    # Generate unique QR ID and store info
     qr_id = str(uuid4())
     qr_store[qr_id] = {"project_name": project_name, "fov": fov, "datetime": now}
 
-    # Construct a URL to be stored in QR code
-    base_url = str(request.base_url).rstrip("/")
-    qr_url = f"{base_url}/qr_info/{qr_id}"
+    # Public URL stored in QR code
+    qr_url = f"{PUBLIC_BASE_URL}/qr_info/{qr_id}"
 
-    # Generate QR code with URL
+    # Create QR code
     qr = qrcode.QRCode(box_size=10, border=4)
     qr.add_data(qr_url)
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white")
 
-    # Convert to base64
+    # Convert to base64 for embedding in HTML
     buf = BytesIO()
     img.save(buf, format="PNG")
     qr_base64 = base64.b64encode(buf.getvalue()).decode("utf-8")
