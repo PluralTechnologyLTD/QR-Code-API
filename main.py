@@ -56,3 +56,8 @@ async def show_qr_info(request: Request, qr_id: str):
     return templates.TemplateResponse(
         "qr_info.html", {"request": request, "data": data}
     )
+
+
+@app.get("/", response_class=HTMLResponse)
+async def read_form(request: Request):
+    return templates.TemplateResponse("form.html", {"request": request})
