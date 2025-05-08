@@ -1,64 +1,58 @@
-from fastapi import FastAPI, Form, Request
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, Request, HTMLResponse
 from fastapi.templating import Jinja2Templates
+from pydantic import BaseModel
+import uuid
 from datetime import datetime
-from uuid import uuid4
-from io import BytesIO
-import qrcode
-import base64
+import os
 
 app = FastAPI()
-templates = Jinja2Templates(directory="templates")
 
-# Simulated in-memory database (use real DB for production)
+# In-memory store for QR data (you can later replace this with a database)
 qr_store = {}
 
-# Replace this with your actual Render app URL after deploying
-PUBLIC_BASE_URL = "https://qr-code-api-k1k4.onrender.com"
+# Initialize Jinja2 Templates with the correct path to the templates folder
+templates = Jinja2Templates(
+    directory=os.path.join(os.path.dirname(__file__), "templates")
+)
 
 
-@app.get("/", response_class=HTMLResponse)
-async def read_form(request: Request):
-    return templates.TemplateResponse(
-        "form.html", {"request": request, "qr_code": None}
-    )
+# Pydantic model to store project info
+class QRData(BaseModel):
+    project_name: str
+    fov: int
+    date_time: str
 
 
-@app.post("/generate_qr/", response_class=HTMLResponse)
-async def generate_qr(
-    request: Request, project_name: str = Form(...), fov: int = Form(...)
-):
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+@app.post("/generate_qr/")
+async def generate_qr(request: Request, project_name: str, fov: int):
+    # Generate unique QR ID
+    qr_id = str(uuid.uuid4())
+    date_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # Generate unique QR ID and store info
-    qr_id = str(uuid4())
-    qr_store[qr_id] = {"project_name": project_name, "fov": fov, "datetime": now}
+    # Create a QR data object
+    qr_data = QRData(project_name=project_name, fov=fov, date_time=date_time)
 
-    # Public URL stored in QR code
-    qr_url = f"{PUBLIC_BASE_URL}/qr_info/{qr_id}"
+    # Store QR data in memory (in a real app, use a database)
+    qr_store[qr_id] = qr_data
 
-    # Create QR code
-    qr = qrcode.QRCode(box_size=10, border=4)
-    qr.add_data(qr_url)
-    qr.make(fit=True)
-    img = qr.make_image(fill_color="black", back_color="white")
+    # Generate a URL to access the data
+    qr_url = f"{request.url_for('show_qr_info', qr_id=qr_id)}"
 
-    # Convert to base64 for embedding in HTML
-    buf = BytesIO()
-    img.save(buf, format="PNG")
-    qr_base64 = base64.b64encode(buf.getvalue()).decode("utf-8")
-
-    return templates.TemplateResponse(
-        "form.html", {"request": request, "qr_code": qr_base64}
-    )
+    # Generate QR code (you can integrate a library like `qrcode` here to generate the actual image)
+    # Here we simply return the URL for simplicity.
+    return {"qr_url": qr_url, "qr_id": qr_id}
 
 
 @app.get("/qr_info/{qr_id}", response_class=HTMLResponse)
 async def show_qr_info(request: Request, qr_id: str):
     data = qr_store.get(qr_id)
     if not data:
-        return HTMLResponse("<h2>QR Info not found.</h2>", status_code=404)
+        return HTMLResponse(
+            "<h2>QR Info not found. Please try scanning a valid QR code.</h2>",
+            status_code=404,
+        )
 
+    # Render the QR information page with data
     return templates.TemplateResponse(
         "qr_info.html", {"request": request, "data": data}
     )
