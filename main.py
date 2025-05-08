@@ -7,6 +7,9 @@ from datetime import datetime
 import qrcode
 import os
 
+
+# "Url for the QR code: https://qr-code-api-k1k4.onrender.com"
+
 app = FastAPI()
 
 # Static files for Tailwind CSS and QR images
