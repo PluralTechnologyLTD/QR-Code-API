@@ -14,7 +14,7 @@ templates = Jinja2Templates(directory="templates")
 qr_store = {}
 
 # Replace this with your actual Render app URL after deploying
-PUBLIC_BASE_URL = "https://yourappname.onrender.com"
+PUBLIC_BASE_URL = "https://qr-code-api-k1k4.onrender.com"
 
 
 @app.get("/", response_class=HTMLResponse)
