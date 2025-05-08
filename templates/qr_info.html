@@ -3,33 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QR Code Info</title>
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>QR Info</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 text-gray-800">
-  <div class="min-h-screen flex items-center justify-center px-4">
-    <div class="bg-white shadow-lg rounded-2xl p-6 w-full max-w-md">
-      <h1 class="text-2xl font-bold text-center mb-4 text-blue-600">QR Code Details</h1>
-      
-      <div class="space-y-4 text-sm sm:text-base">
-        <div>
-          <span class="font-semibold text-gray-700">Project Name:</span>
-          <p class="text-gray-900">{{ data.project_name }}</p>
-        </div>
-        <div>
-          <span class="font-semibold text-gray-700">Field of View (FOV):</span>
-          <p class="text-gray-900">{{ data.fov }}</p>
-        </div>
-        <div>
-          <span class="font-semibold text-gray-700">Date & Time:</span>
-          <p class="text-gray-900">{{ data.date_time }}</p>
-        </div>
-      </div>
-
-      <div class="mt-6 text-center">
-        <a href="/" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Generate New QR</a>
-      </div>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
+  <div class="bg-white p-6 rounded-2xl shadow-md w-full max-w-md">
+    <h2 class="text-2xl font-semibold text-gray-700 mb-4">QR Code Details</h2>
+    <div class="space-y-2 text-gray-700">
+      <p><span class="font-medium">Project Name:</span> {{ data.project_name }}</p>
+      <p><span class="font-medium">FOV:</span> {{ data.fov }}</p>
+      <p><span class="font-medium">Timestamp:</span> {{ data.timestamp }}</p>
     </div>
   </div>
 </body>

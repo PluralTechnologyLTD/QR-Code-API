@@ -1,32 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Generate QR Code</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Generator</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gradient-to-r from-blue-50 to-purple-100 min-h-screen flex items-center justify-center">
-  <div class="bg-white shadow-lg rounded-2xl p-6 w-full max-w-md">
-    <h1 class="text-2xl font-bold text-center text-blue-600 mb-6">QR Code Generator</h1>
-
-    <form action="/generate_qr/" method="post" class="space-y-4">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-6 text-center text-gray-700">Generate a QR Code</h1>
+    <form method="post" action="/generate_qr/" class="space-y-4">
       <div>
-        <label class="block text-sm font-medium text-gray-700">Project Name</label>
-        <input type="text" name="project_name" required
-               class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+        <label class="block text-sm font-medium text-gray-600">Project Name</label>
+        <input type="text" name="project_name" required class="mt-1 w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring focus:ring-blue-300" />
       </div>
-
       <div>
-        <label class="block text-sm font-medium text-gray-700">Field of View (FOV)</label>
-        <input type="number" name="fov" required
-               class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+        <label class="block text-sm font-medium text-gray-600">Field of View (FOV)</label>
+        <input type="number" name="fov" required class="mt-1 w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring focus:ring-blue-300" />
       </div>
-
-      <button type="submit"
-              class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition">
-        Generate QR Code
-      </button>
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">Generate QR Code</button>
     </form>
   </div>
 </body>
